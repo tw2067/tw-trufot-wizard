@@ -31,7 +31,7 @@ Tool contracts are defined in `app/tools/contracts.py`, and implemented in `app/
 * `prescription_verify(patient_id, med_id, intent, language)` -> prescription requirement + patient prescription status
 * `interaction_check(med_ids, language)` -> interaction level + flagged pairs
 
-See: `app/docs/tools.md`
+See: `docs/tools.md`
 
 NOTE: I added finding equivalent and interaction check services to support better customer service and more complete information.
 
