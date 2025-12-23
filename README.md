@@ -39,7 +39,7 @@ NOTE: I added finding equivalent and interaction check services to support bette
 ## Multi-step Flows
 ### Flow 1 - out of stock -> equivalent substitution
 1. `inventory_check("...")`
-2. If qty_on_hand == 0 ⇒ `inventory_find_equivalent(med_id)`
+2. If qty_on_hand == 0 -> `inventory_find_equivalent(med_id)`
 3. Assistant discloses equivalence and **possible differences** (price / inactive ingredients / packaging)
 
 ### Flow 2 - refill workflow
