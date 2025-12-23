@@ -1,4 +1,4 @@
-# TW Trufot Wizard — Pharmacy Agent
+# TW Trufot Wizard - Pharmacy Agent
 
 A **stateless**, real-time conversational pharmacy assistant,
 with Python backend, and tool-driven workflows for prescription verification, inventory, and interactions.
