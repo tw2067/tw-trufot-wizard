@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TW Trufot Wizard</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1b32;
+      --panel2:#101f3a;
+      --text:#e8eefc;
+      --muted:#a9b7d6;
+      --accent:#4fd1c5;
+      --accent2:#60a5fa;
+      --warn:#fbbf24;
+      --danger:#fb7185;
+      --border:rgba(255,255,255,0.10);
+      --shadow: 0 24px 90px rgba(0,0,0,0.40);
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:
+        radial-gradient(1100px 600px at 18% 0%, rgba(79,209,197,0.14), transparent 60%),
+        radial-gradient(900px 520px at 82% 12%, rgba(96,165,250,0.14), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 24px 14px;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    header.top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 260px;
+    }
+
+    .logo{
+      width:46px; height:46px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      letter-spacing:0.6px;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(79,209,197,0.26), rgba(96,165,250,0.26));
+      box-shadow: 0 10px 36px rgba(0,0,0,0.25);
+    }
+
+    .title{
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+    .subtitle{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .controls{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 13px;
+      user-select:none;
+    }
+    .toggle input{ accent-color: var(--accent); }
+
+    .btn{
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      cursor:pointer;
+    }
+    .btn:hover{ background: rgba(255,255,255,0.09); }
+    .btn:disabled{ opacity:0.55; cursor:not-allowed; }
+
+    .status{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .hidden{ display:none; }
+    .dot{
+      width:10px; height:10px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 7px rgba(79,209,197,0.14);
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse{
+      0%{ transform: scale(0.92); opacity: 0.65; }
+      50%{ transform: scale(1.10); opacity: 1; }
+      100%{ transform: scale(0.92); opacity: 0.65; }
+    }
+
+    #chat{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      padding: 14px;
+      border-radius: 18px;
+      min-height: 420px;
+      box-shadow: var(--shadow);
+      overflow:auto;
+    }
+
+    .msg{ margin: 12px 0; }
+
+    .label{
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .bubble{
+      display:inline-block;
+      max-width: 92%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      white-space: pre-wrap;
+      line-height: 1.4;
+    }
+    .bubble.user{
+      background: rgba(96,165,250,0.13);
+      border-color: rgba(96,165,250,0.26);
+    }
+    .bubble.assistant{
+      background: rgba(79,209,197,0.11);
+      border-color: rgba(79,209,197,0.23);
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      margin-top: 14px;
+    }
+    #inp{
+      flex:1;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      outline:none;
+    }
+    #inp::placeholder{ color: rgba(169,183,214,0.75); }
+
+    .send{
+      background: linear-gradient(135deg, rgba(79,209,197,0.22), rgba(96,165,250,0.18));
+    }
+
+    #toolsPanel{
+      margin-top: 12px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,0.16);
+      background: rgba(15,27,50,0.6);
+      padding: 10px 12px;
+      box-shadow: 0 18px 70px rgba(0,0,0,0.25);
+    }
+
+    .tool{
+      margin: 10px 0;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      overflow-x:auto;
+      white-space: pre;
+    }
+
+    .footnote{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">TW</div>
+        <div>
+          <div class="title">TW Trufot Wizard</div>
+          <div class="subtitle">Medication facts • Stock • Rx verification • Interaction flags (no medical advice)</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <label class="toggle">
+          <input type="checkbox" id="showTools">
+          <span>Show tool calls</span>
+        </label>
+        <button id="reset" class="btn" type="button">Reset</button>
+      </div>
+    </header>
+
+    <div id="statusBar" class="status hidden">
+      <span class="dot"></span>
+      <span id="statusText">Working…</span>
+    </div>
+
+    <div id="chat"></div>
+
+    <div id="toolsPanel" class="hidden"></div>
+
+    <div class="row">
+      <input id="inp" placeholder="Type in Hebrew or English..." />
+      <button id="send" class="btn send" type="button">Send</button>
+    </div>
+
+    <div class="footnote">
+      TW Trufot Wizard provides factual information only. For medical advice or diagnosis, consult a licensed professional.
+    </div>
+  </div>
+
+<script>
+  const chat = document.getElementById("chat");
+  const toolsPanel = document.getElementById("toolsPanel");
+  const showTools = document.getElementById("showTools");
+  const statusBar = document.getElementById("statusBar");
+  const statusText = document.getElementById("statusText");
+
+  const inp = document.getElementById("inp");
+  const sendBtn = document.getElementById("send");
+  const resetBtn = document.getElementById("reset");
+
+  // Stateless server; client keeps JSON-safe history
+  let history = JSON.parse(localStorage.getItem("pharm_history") || "[]");
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+  }
+
+  function addLine(html) {
+    const div = document.createElement("div");
+    div.className = "msg";
+    div.innerHTML = html;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+    return div;
+  }
+
+  function setWorking(isWorking, text="Working…") {
+    if (isWorking) {
+      statusText.textContent = text;
+      statusBar.classList.remove("hidden");
+      sendBtn.disabled = true;
+      inp.disabled = true;
+    } else {
+      statusBar.classList.add("hidden");
+      sendBtn.disabled = false;
+      inp.disabled = false;
+    }
+  }
+
+  function saveHistory(h) {
+    history = h;
+    localStorage.setItem("pharm_history", JSON.stringify(history));
+  }
+
+  function renderExisting() {
+    chat.innerHTML = "";
+    addLine(`
+      <div class="label">
+        <span class="pill">Session</span>
+        <span>History loaded: ${history.length} items</span>
+      </div>
+    `);
+  }
+  renderExisting();
+
+  function appendToolBlock(title, payloadObj) {
+    // only show if toggled
+    if (!showTools.checked) return;
+    toolsPanel.classList.remove("hidden");
+
+    const pre = document.createElement("div");
+    pre.className = "tool";
+    pre.textContent = `${title}\n${JSON.stringify(payloadObj, null, 2)}`;
+    toolsPanel.appendChild(pre);
+    toolsPanel.scrollTop = toolsPanel.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const text = inp.value.trim();
+    if (!text) return;
+
+    // Clear tool panel for this turn (optional)
+    toolsPanel.innerHTML = "";
+    if (!showTools.checked) toolsPanel.classList.add("hidden");
+
+    addLine(`
+      <div class="label"><span class="pill">You</span></div>
+      <div class="bubble user">${escapeHtml(text)}</div>
+    `);
+    inp.value = "";
+
+    // Assistant streaming container
+    const assistantDiv = addLine(`
+      <div class="label"><span class="pill">TW Assistant</span><span id="phase" class="pill">streaming</span></div>
+      <div class="bubble assistant"><span id="live"></span></div>
+    `);
+    const liveSpan = assistantDiv.querySelector("#live");
+    const phasePill = assistantDiv.querySelector("#phase");
+
+    setWorking(true, "Thinking / searching…");
+
+    let resp;
+    try {
+      resp = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ message: text, history })
+      });
+    } catch (e) {
+      setWorking(false);
+      addLine(`<div class="label"><span class="pill">Error</span></div><div class="bubble user">${escapeHtml(String(e))}</div>`);
+      return;
+    }
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = "";
+
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // SSE chunks are separated by blank lines
+        const parts = buffer.split("\n\n");
+        buffer = parts.pop();
+
+        for (const part of parts) {
+          const lines = part.split("\n");
+          let eventName = "message";
+          let dataLine = null;
+
+          for (const line of lines) {
+            if (line.startsWith("event: ")) eventName = line.slice(7).trim();
+            if (line.startsWith("data: ")) dataLine = line.slice(6);
+          }
+          if (!dataLine) continue;
+
+          const ev = JSON.parse(dataLine);
+
+          if (eventName === "text_delta") {
+            liveSpan.textContent += ev.delta;
+            phasePill.textContent = "streaming";
+
+          } else if (eventName === "tool_call") {
+            phasePill.textContent = "calling tools";
+            appendToolBlock(`TOOL CALL: ${ev.name}`, ev.arguments ?? ev);
+
+          } else if (eventName === "tool_result") {
+            phasePill.textContent = "processing results";
+            appendToolBlock(`TOOL RESULT: ${ev.name}`, ev.output ?? ev);
+
+          } else if (eventName === "error") {
+            phasePill.textContent = "error";
+            appendToolBlock("ERROR", ev);
+            setWorking(false);
+
+          } else if (eventName === "history") {
+            // this is the JSON-safe history from the server
+            saveHistory(ev.history);
+            phasePill.textContent = "done";
+            setWorking(false);
+
+          } else if (eventName === "done") {
+            // no-op (server will still send "history" after generator completes)
+            phasePill.textContent = "finishing…";
+          }
+        }
+      }
+    } catch (e) {
+      appendToolBlock("CLIENT ERROR", { message: String(e) });
+    } finally {
+      setWorking(false);
+    }
+  }
+
+  // Tool toggle shows/hides panel without affecting tool use
+  showTools.addEventListener("change", () => {
+    if (showTools.checked) {
+      toolsPanel.classList.remove("hidden");
+    } else {
+      toolsPanel.classList.add("hidden");
+    }
+  });
+
+  sendBtn.onclick = sendMessage;
+  inp.addEventListener("keydown", (e) => { if (e.key === "Enter") sendMessage(); });
+
+  resetBtn.onclick = () => {
+    localStorage.removeItem("pharm_history");
+    history = [];
+    toolsPanel.innerHTML = "";
+    toolsPanel.classList.add("hidden");
+    renderExisting();
+  };
+</script>
+</body>
+</html>
