@@ -52,6 +52,7 @@ NOTE: I added finding equivalent and interaction check services to support bette
 2. `interaction_check([med_id...])`
 3. If avoid -> explicit warning: cannot be taken together and consult a clinician
 
+see `app/eval` for evaluation
 ---
 ## Run with Docker
 ```bash
